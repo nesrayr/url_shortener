@@ -5,7 +5,8 @@ import (
 )
 
 type Config struct {
-	Host     string `config:"HOST" yaml:"host" validate:"required"`
-	Port     string `config:"PORT" yaml:"port" validate:"required"`
-	Database postgres.Config
+	Host          string `config:"HOST" yaml:"host"`
+	Port          string `config:"PORT" yaml:"port"`
+	TransportMode string `con`
+	Database      postgres.Config
 }
