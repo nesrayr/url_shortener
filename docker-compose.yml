@@ -21,6 +21,9 @@ services:
       context: .
       args:
         LOCAL: "true"
+    environment:
+      STORAGE_MODE: "${STORAGE_MODE}"
+      TRANSPORT_MODE: "${TRANSPORT_MODE}"
     env_file:
       - .env
     ports:

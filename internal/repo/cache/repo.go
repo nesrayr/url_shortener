@@ -29,23 +29,35 @@ func (r *Repository) GetUrl(ctx context.Context, alias string) (string, error) {
 	return url, nil
 }
 
-func (r *Repository) AddUrl(ctx context.Context, url string, alias string) error {
+func (r *Repository) CreateUrl(ctx context.Context, url string, alias string) error {
 	r.c.Mu.Lock()
 	defer r.c.Mu.Unlock()
 
 	r.c.UrlMap[url] = alias
 	r.c.AliasMap[alias] = url
+	r.l.Infof("insert url %s and alias %s to cache", url, alias)
 
 	return nil
 }
 
-func (r *Repository) Contains(ctx context.Context, alias string) (bool, error) {
+func (r *Repository) ContainsAlias(ctx context.Context, alias string) bool {
 	r.c.Mu.RLock()
 	defer r.c.Mu.RUnlock()
 
 	if _, ok := r.c.AliasMap[alias]; ok {
-		return true, nil
+		return true
 	}
 
-	return false, nil
+	return false
+}
+
+func (r *Repository) ContainsUrl(ctx context.Context, url string) bool {
+	r.c.Mu.RLock()
+	defer r.c.Mu.RUnlock()
+
+	if _, ok := r.c.UrlMap[url]; ok {
+		return true
+	}
+
+	return false
 }

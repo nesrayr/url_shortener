@@ -15,13 +15,13 @@ func NewRepository(db *pgxpool.Pool, l logging.Logger) *Repository {
 	return &Repository{db: db, l: &l}
 }
 
-func (r *Repository) AddUrl(ctx context.Context, url string, alias string) error {
+func (r *Repository) CreateUrl(ctx context.Context, url string, alias string) error {
 	_, err := r.db.Exec(ctx, insertUrlQuery, alias, url)
 	if err != nil {
 		r.l.Error(err)
 		return err
 	}
-	r.l.Infof("inserting url %s with alias %s in db", url, alias)
+	r.l.Infof("inserting url %s with alias %s to db", url, alias)
 
 	return nil
 }
@@ -38,14 +38,26 @@ func (r *Repository) GetUrl(ctx context.Context, alias string) (string, error) {
 	return url, nil
 }
 
-func (r *Repository) Contains(ctx context.Context, alias string) (bool, error) {
-	rows, err := r.db.Query(ctx, selectAliasQuery, alias)
+func (r *Repository) ContainsAlias(ctx context.Context, alias string) bool {
+	rows, err := r.db.Query(ctx, checkAliasQuery, alias)
 	if err != nil {
 		r.l.Error(err)
-		return false, err
+		return false
 	}
 	if rows.Next() {
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
+}
+
+func (r *Repository) ContainsUrl(ctx context.Context, url string) bool {
+	rows, err := r.db.Query(ctx, checkUrlQuery, url)
+	if err != nil {
+		r.l.Error(err)
+		return false
+	}
+	if rows.Next() {
+		return true
+	}
+	return false
 }

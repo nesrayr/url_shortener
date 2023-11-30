@@ -3,5 +3,6 @@ package postgres
 const (
 	insertUrlQuery        = `INSERT INTO urls(alias, url) VALUES ($1, $2)`
 	selectUrlByAliasQuery = `SELECT url FROM urls WHERE alias=$1`
-	selectAliasQuery      = `SELECT * FROM urls WHERE alias=$1`
+	checkAliasQuery       = `SELECT * FROM urls WHERE alias=$1`
+	checkUrlQuery         = `SELECT * FROM urls WHERE url=$1`
 )
