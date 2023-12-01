@@ -49,11 +49,12 @@ func (mr *MockRepositoryMockRecorder) ContainsAlias(ctx, alias interface{}) *gom
 }
 
 // ContainsUrl mocks base method.
-func (m *MockRepository) ContainsUrl(ctx context.Context, url string) bool {
+func (m *MockRepository) ContainsUrl(ctx context.Context, url string) (bool, string) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContainsUrl", ctx, url)
 	ret0, _ := ret[0].(bool)
-	return ret0
+	ret1, _ := ret[1].(string)
+	return ret0, ret1
 }
 
 // ContainsUrl indicates an expected call of ContainsUrl.

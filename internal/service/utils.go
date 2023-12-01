@@ -1,9 +1,12 @@
 package service
 
 import (
+	"errors"
 	"math/rand"
 	"net/url"
 )
+
+var ErrUrlAlreadyExists = errors.New("url already exists in storage")
 
 const aliasLength = 10
 

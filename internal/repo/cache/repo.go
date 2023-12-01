@@ -51,13 +51,13 @@ func (r *Repository) ContainsAlias(ctx context.Context, alias string) bool {
 	return false
 }
 
-func (r *Repository) ContainsUrl(ctx context.Context, url string) bool {
+func (r *Repository) ContainsUrl(ctx context.Context, url string) (bool, string) {
 	r.c.Mu.RLock()
 	defer r.c.Mu.RUnlock()
 
-	if _, ok := r.c.UrlMap[url]; ok {
-		return true
+	if alias, ok := r.c.UrlMap[url]; ok {
+		return true, alias
 	}
 
-	return false
+	return false, ""
 }

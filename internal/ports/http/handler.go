@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"url_shortener/internal/service"
@@ -29,7 +30,11 @@ func (h *Handler) ShortenUrl(ctx *gin.Context) {
 	}
 
 	alias, err := h.service.AddUrl(ctx, request.Url)
-	if err != nil {
+	if errors.Is(err, service.ErrUrlAlreadyExists) {
+		ctx.JSON(http.StatusOK, gin.H{"error": err.Error(),
+			"alias": alias})
+		return
+	} else if err != nil {
 		h.l.Error(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

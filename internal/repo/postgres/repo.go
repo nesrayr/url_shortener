@@ -50,14 +50,19 @@ func (r *Repository) ContainsAlias(ctx context.Context, alias string) bool {
 	return false
 }
 
-func (r *Repository) ContainsUrl(ctx context.Context, url string) bool {
+func (r *Repository) ContainsUrl(ctx context.Context, url string) (bool, string) {
 	rows, err := r.db.Query(ctx, checkUrlQuery, url)
 	if err != nil {
 		r.l.Error(err)
-		return false
+		return false, ""
 	}
+	var alias string
 	if rows.Next() {
-		return true
+		err = rows.Scan(&alias)
+		if err != nil {
+			r.l.Error(err)
+		}
+		return true, alias
 	}
-	return false
+	return false, ""
 }

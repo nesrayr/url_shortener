@@ -101,6 +101,79 @@ make up-grpc-postgres - # Запуск grpc-сервера, postgresql - в ка
 make up-grpc-cache - # Запуск grpc-сервера, in-memory cache - в качестве хранилища
 ```
 
+## Формат запросов
+
+### HTTP 
+
+#### Сохраняет URL в хранилище и возвращает сокращенный
+
+* Метод: `POST`
+* Эндпоинт: `http://localhost:8080/shorten`
+* Формат тела запроса:
+
+```json
+{
+    "url": "https://www.youtube.com"
+}
+```
+
+* Формат ответа:
+
+```json
+{
+  "alias": "SL9bwykhFs"
+}
+```
+
+#### Принимает сокращенный URL, возвращает оригинальный 
+
+* Метод: `GET`
+* Эндпоинт: `http://localhost:8080/get-url`
+* Формат тела запроса:
+
+```json
+{
+    "alias": "SL9bwykhFs"
+}
+```
+
+* Формат ответа:
+
+```json
+{
+  "alias": "https://www.youtube.com"
+}
+```
+
+### GRPC
+
+#### Сохраняет URL в хранилище и возвращает сокращенный
+
+* Обработчик: `ShortenUrl`
+* Формат запроса и ответа:
+
+```text
+app.UrlShortener@127.0.0.1:8080> call ShortenUrl
+url (TYPE_STRING) => http://localhost
+{                      
+  "alias": "CqTJate_ol"
+}   
+```
+
+#### Принимает сокращенный URL, возвращает оригинальный
+
+* Обработчик: `GetUrl`
+* Формат запроса и ответа:
+
+```text
+app.UrlShortener@127.0.0.1:8080> call GetUrl
+alias (TYPE_STRING) => CqTJate_ol
+{
+  "url": "http://localhost"
+}
+ 
+```
+
 ## Тестирование
 
 Для запуска тестов:

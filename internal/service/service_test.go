@@ -57,7 +57,7 @@ func TestAddUrlCorrect(t *testing.T) {
 	in := "http://localhost"
 
 	//var expAlias string
-	repo.EXPECT().ContainsUrl(ctx, in).Return(false)
+	repo.EXPECT().ContainsUrl(ctx, in).Return(false, "")
 	repo.EXPECT().ContainsAlias(ctx, gomock.Any()).Return(false)
 	repo.EXPECT().CreateUrl(ctx, in, gomock.Any()).Return(nil)
 
@@ -89,13 +89,13 @@ func TestAddUrlAlreadyExists(t *testing.T) {
 	ctx, l, repo := Init(ctl)
 	in := "http://localhost"
 
-	repo.EXPECT().ContainsUrl(ctx, in).Return(true)
+	repo.EXPECT().ContainsUrl(ctx, in).Return(true, gomock.Any().String())
 
 	service := NewService(repo, l)
 
 	_, err := service.AddUrl(ctx, in)
 	require.Error(t, err)
-	expError := fmt.Errorf("url %s already exist in storage", in)
+	expError := ErrUrlAlreadyExists
 	require.EqualError(t, err, expError.Error())
 }
 
@@ -106,7 +106,7 @@ func TestAddUrl_AliasAlreadyExists(t *testing.T) {
 	ctx, l, repo := Init(ctl)
 	in := "http://localhost"
 
-	repo.EXPECT().ContainsUrl(ctx, in).Return(false)
+	repo.EXPECT().ContainsUrl(ctx, in).Return(false, "")
 	repo.EXPECT().ContainsAlias(ctx, gomock.Any()).Return(true)
 	repo.EXPECT().CreateUrl(ctx, in, gomock.Any()).Return(nil)
 
@@ -123,7 +123,7 @@ func TestAddUrlError(t *testing.T) {
 	ctx, l, repo := Init(ctl)
 	in := "http://localhost"
 
-	repo.EXPECT().ContainsUrl(ctx, in).Return(false)
+	repo.EXPECT().ContainsUrl(ctx, in).Return(false, "")
 	repo.EXPECT().ContainsAlias(ctx, gomock.Any()).Return(false)
 	repo.EXPECT().CreateUrl(ctx, in, gomock.Any()).Return(errors.New("smth went wrong"))
 

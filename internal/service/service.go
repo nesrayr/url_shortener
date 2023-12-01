@@ -29,13 +29,15 @@ func (s *Service) AddUrl(ctx context.Context, url string) (string, error) {
 		return "", fmt.Errorf("url %s is invalid", url)
 	}
 
-	if s.repo.ContainsUrl(ctx, url) {
+	check, alias := s.repo.ContainsUrl(ctx, url)
+
+	if check {
 		s.l.Errorf("url %s already exist in storage", url)
-		return "", fmt.Errorf("url %s already exist in storage", url)
+		return alias, ErrUrlAlreadyExists
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	alias := GenerateAlias()
+	alias = GenerateAlias()
 
 	s.l.Debug(alias)
 
