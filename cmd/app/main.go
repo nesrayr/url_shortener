@@ -13,7 +13,8 @@ import (
 	"syscall"
 	"url_shortener/config"
 	"url_shortener/internal/migrations"
-	"url_shortener/internal/ports"
+	grpc_ "url_shortener/internal/ports/grpc"
+	router "url_shortener/internal/ports/http"
 	"url_shortener/internal/repo"
 	cacheRepo "url_shortener/internal/repo/cache"
 	postgresRepo "url_shortener/internal/repo/postgres"
@@ -86,8 +87,17 @@ func main() {
 	serv := service.NewService(repository, logger)
 
 	if cfg.TransportMode == httpTransportMode {
-		router := ports.SetupRouter(serv, logger)
-		err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router)
+		r := router.SetupRouter(serv, logger)
+
+		err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), r)
+		if err != nil {
+			logger.Fatal(err)
+		}
+	} else if cfg.TransportMode == grpcTransportMode {
+		h := grpc_.NewHandler(serv, logger)
+		srv := grpc_.NewServer(h, logger)
+
+		err = srv.Run(cfg.Port)
 		if err != nil {
 			logger.Fatal(err)
 		}

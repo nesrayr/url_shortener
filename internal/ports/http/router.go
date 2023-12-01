@@ -1,4 +1,4 @@
-package ports
+package http
 
 import (
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ func SetupRouter(service service.UrlService, logger logging.Logger) *gin.Engine 
 
 	handler := NewHandler(service, logger)
 
-	router.POST("/api/shorten", handler.AddUrl)
+	router.POST("/api/shorten", handler.ShortenUrl)
 	router.GET("/api/get-url/:alias", handler.GetUrl)
 
 	return router

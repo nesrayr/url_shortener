@@ -1,4 +1,4 @@
-package ports
+package http
 
 import (
 	"github.com/gin-gonic/gin"
@@ -20,7 +20,7 @@ func NewHandler(service service.UrlService, l logging.Logger) *Handler {
 	return &Handler{service: service, l: &l}
 }
 
-func (h *Handler) AddUrl(ctx *gin.Context) {
+func (h *Handler) ShortenUrl(ctx *gin.Context) {
 	var request AddUrlRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		h.l.Error(err)
