@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -55,5 +56,79 @@ func TestAddUrlCorrect(t *testing.T) {
 	ctx, l, repo := Init(ctl)
 	in := "http://localhost"
 
-	expAlias
+	//var expAlias string
+	repo.EXPECT().ContainsUrl(ctx, in).Return(false)
+	repo.EXPECT().ContainsAlias(ctx, gomock.Any()).Return(false)
+	repo.EXPECT().CreateUrl(ctx, in, gomock.Any()).Return(nil)
+
+	service := NewService(repo, l)
+
+	_, err := service.AddUrl(ctx, in)
+	require.NoError(t, err)
+}
+
+func TestAddInvalidUrl(t *testing.T) {
+	ctl := gomock.NewController(t)
+	defer ctl.Finish()
+
+	ctx, l, repo := Init(ctl)
+	in := ""
+
+	service := NewService(repo, l)
+
+	_, err := service.AddUrl(ctx, in)
+	require.Error(t, err)
+	expError := fmt.Errorf("url %s is invalid", in)
+	require.EqualError(t, err, expError.Error())
+}
+
+func TestAddUrlAlreadyExists(t *testing.T) {
+	ctl := gomock.NewController(t)
+	defer ctl.Finish()
+
+	ctx, l, repo := Init(ctl)
+	in := "http://localhost"
+
+	repo.EXPECT().ContainsUrl(ctx, in).Return(true)
+
+	service := NewService(repo, l)
+
+	_, err := service.AddUrl(ctx, in)
+	require.Error(t, err)
+	expError := fmt.Errorf("url %s already exist in storage", in)
+	require.EqualError(t, err, expError.Error())
+}
+
+func TestAddUrl_AliasAlreadyExists(t *testing.T) {
+	ctl := gomock.NewController(t)
+	defer ctl.Finish()
+
+	ctx, l, repo := Init(ctl)
+	in := "http://localhost"
+
+	repo.EXPECT().ContainsUrl(ctx, in).Return(false)
+	repo.EXPECT().ContainsAlias(ctx, gomock.Any()).Return(true)
+	repo.EXPECT().CreateUrl(ctx, in, gomock.Any()).Return(nil)
+
+	service := NewService(repo, l)
+
+	_, err := service.AddUrl(ctx, in)
+	require.NoError(t, err)
+}
+
+func TestAddUrlError(t *testing.T) {
+	ctl := gomock.NewController(t)
+	defer ctl.Finish()
+
+	ctx, l, repo := Init(ctl)
+	in := "http://localhost"
+
+	repo.EXPECT().ContainsUrl(ctx, in).Return(false)
+	repo.EXPECT().ContainsAlias(ctx, gomock.Any()).Return(false)
+	repo.EXPECT().CreateUrl(ctx, in, gomock.Any()).Return(errors.New("smth went wrong"))
+
+	service := NewService(repo, l)
+
+	_, err := service.AddUrl(ctx, in)
+	require.Error(t, err)
 }

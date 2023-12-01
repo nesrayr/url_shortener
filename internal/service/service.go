@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"time"
 	"url_shortener/internal/repo"
-	"url_shortener/internal/service/utils"
 	"url_shortener/pkg/logging"
 )
 
@@ -25,7 +24,7 @@ func NewService(repo repo.Repository, l logging.Logger) *Service {
 }
 
 func (s *Service) AddUrl(ctx context.Context, url string) (string, error) {
-	if !utils.IsValid(url) {
+	if !IsValid(url) {
 		s.l.Errorf("url %s is invalid", url)
 		return "", fmt.Errorf("url %s is invalid", url)
 	}
@@ -36,13 +35,13 @@ func (s *Service) AddUrl(ctx context.Context, url string) (string, error) {
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	alias := utils.GenerateAlias()
+	alias := GenerateAlias()
 
 	s.l.Debug(alias)
 
-	for s.repo.ContainsAlias(ctx, alias) {
+	if s.repo.ContainsAlias(ctx, alias) {
 		s.l.Infof("alias %s already exists in storage", alias)
-		alias = utils.GenerateAlias()
+		alias = GenerateAlias()
 	}
 
 	err := s.repo.CreateUrl(ctx, url, alias)
