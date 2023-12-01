@@ -11,8 +11,8 @@ func SetupRouter(service service.UrlService, logger logging.Logger) *gin.Engine 
 
 	handler := NewHandler(service, logger)
 
-	router.POST("/api/shorten", handler.ShortenUrl)
-	router.GET("/api/get-url/:alias", handler.GetUrl)
+	router.POST("/shorten", handler.ShortenUrl)
+	router.GET("/get-url/:alias", handler.GetUrl)
 
 	return router
 }
