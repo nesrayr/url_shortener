@@ -32,7 +32,7 @@ func (s *Service) AddUrl(ctx context.Context, url string) (string, error) {
 	check, alias := s.repo.ContainsUrl(ctx, url)
 
 	if check {
-		s.l.Errorf("url %s already exist in storage", url)
+		s.l.Infof("url %s already exist in storage", url)
 		return alias, ErrUrlAlreadyExists
 	}
 

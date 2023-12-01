@@ -18,3 +18,6 @@ test:
 
 cover:
 	go tool cover -html=./internal/service/coverage.out
+
+evans:
+	evans protos/proto/app.proto -p 8080

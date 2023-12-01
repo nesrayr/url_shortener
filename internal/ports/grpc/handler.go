@@ -28,7 +28,7 @@ func (h *Handler) ShortenUrl(ctx context.Context, request *protos.ShortenUrlRequ
 	alias, err := h.service.AddUrl(ctx, url)
 	if err != nil {
 		h.l.Error(err)
-		return &protos.ShortenUrlResponse{Alias: alias}, err
+		return &protos.ShortenUrlResponse{Alias: alias}, nil
 	}
 
 	h.l.Infof("grpc responded on %s", addr)

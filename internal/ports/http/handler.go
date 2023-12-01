@@ -31,8 +31,7 @@ func (h *Handler) ShortenUrl(ctx *gin.Context) {
 
 	alias, err := h.service.AddUrl(ctx, request.Url)
 	if errors.Is(err, service.ErrUrlAlreadyExists) {
-		ctx.JSON(http.StatusOK, gin.H{"error": err.Error(),
-			"alias": alias})
+		ctx.JSON(http.StatusOK, gin.H{"alias": alias})
 		return
 	} else if err != nil {
 		h.l.Error(err)
