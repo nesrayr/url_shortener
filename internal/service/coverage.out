@@ -1,0 +1,14 @@
+mode: set
+url_shortener/internal/service/service.go:23.66,25.2 1 1
+url_shortener/internal/service/service.go:27.75,28.25 1 0
+url_shortener/internal/service/service.go:28.25,31.3 2 0
+url_shortener/internal/service/service.go:33.2,33.34 1 0
+url_shortener/internal/service/service.go:33.34,36.3 2 0
+url_shortener/internal/service/service.go:38.2,43.39 4 0
+url_shortener/internal/service/service.go:43.39,46.3 2 0
+url_shortener/internal/service/service.go:48.2,49.16 2 0
+url_shortener/internal/service/service.go:49.16,51.3 1 0
+url_shortener/internal/service/service.go:53.2,53.19 1 0
+url_shortener/internal/service/service.go:56.77,58.16 2 1
+url_shortener/internal/service/service.go:58.16,60.3 1 1
+url_shortener/internal/service/service.go:62.2,62.17 1 1
