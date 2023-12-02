@@ -57,7 +57,7 @@ func (s *Service) AddUrl(ctx context.Context, url string) (string, error) {
 func (s *Service) GetUrl(ctx context.Context, alias string) (string, error) {
 	url, err := s.repo.GetUrl(ctx, alias)
 	if err != nil {
-		return "", err
+		return "", ErrUrlDoesNotExist
 	}
 
 	return url, nil

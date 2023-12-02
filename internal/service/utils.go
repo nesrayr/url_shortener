@@ -6,7 +6,10 @@ import (
 	"net/url"
 )
 
-var ErrUrlAlreadyExists = errors.New("url already exists in storage")
+var (
+	ErrUrlAlreadyExists = errors.New("url already exists in storage")
+	ErrUrlDoesNotExist  = errors.New("url doesn't exist")
+)
 
 const aliasLength = 10
 
