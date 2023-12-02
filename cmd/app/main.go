@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 	"url_shortener/config"
 	"url_shortener/internal/migrations"
 	grpc_ "url_shortener/internal/ports/grpc"
@@ -50,6 +51,8 @@ func main() {
 		if err != nil {
 			logger.Fatal(err)
 		}
+		// wait postgresql starting up
+		time.Sleep(2 * time.Second)
 		err = db.Ping(ctx)
 		if err != nil {
 			logger.Fatal(err)
